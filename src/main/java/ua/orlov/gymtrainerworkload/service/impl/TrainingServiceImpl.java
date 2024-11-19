@@ -1,16 +1,17 @@
 package ua.orlov.gymtrainerworkload.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.orlov.gymtrainerworkload.model.Trainer;
 import ua.orlov.gymtrainerworkload.model.Training;
 import ua.orlov.gymtrainerworkload.repository.TrainingRepository;
-import ua.orlov.gymtrainerworkload.service.TrainerService;
 import ua.orlov.gymtrainerworkload.service.TrainingService;
 
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -24,12 +25,27 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
+    @Transactional
     public void deleteTraining(Training training) {
-        trainingRepository.delete(training);
+        Training foundTraining =
+                getTrainingByCriteria(training.getTrainer(), training.getTrainingDate(), training.getDuration());
+
+        trainingRepository.delete(foundTraining);
     }
 
     @Override
     public List<Training> findAllTrainingsByTrainer(Trainer trainer) {
         return trainingRepository.findByTrainer(trainer);
     }
+
+    private Training getTrainingByCriteria(Trainer trainer, LocalDate trainingDate, Long trainingDuration) {
+        Objects.requireNonNull(trainer, "Trainer must not be null");
+
+        return trainingRepository.findByTrainerAndTrainingDateAndDuration(trainer, trainingDate, trainingDuration)
+                .orElseThrow(() -> new NoSuchElementException(
+                        String.format("No training found for trainer '%s' on %s with duration %d",
+                        trainer.getUsername(), trainingDate, trainingDuration)
+                ));
+    }
+
 }

@@ -2,6 +2,7 @@ package ua.orlov.gymtrainerworkload.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
@@ -15,7 +16,7 @@ public class TrainerController {
     private final TrainerService trainerService;
 
     @PostMapping("/workload")
-    public ResponseEntity<String> changeWorkLoad(@RequestBody TrainerWorkload trainerWorkload) {
+    public ResponseEntity<String> changeWorkLoad(@RequestBody @Validated TrainerWorkload trainerWorkload) {
         trainerService.changeTrainerWorkload(trainerWorkload);
 
         return ResponseEntity.ok("Workload changed");

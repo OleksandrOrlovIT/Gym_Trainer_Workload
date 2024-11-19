@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static ua.orlov.gymtrainerworkload.mapper.TrainerMapper.trainerToTrainerSummary;
 import static ua.orlov.gymtrainerworkload.mapper.TrainerMapper.trainerWorkloadToTrainer;
 import static ua.orlov.gymtrainerworkload.mapper.TrainingMapper.trainerWorkloadToTraining;
 
@@ -37,30 +38,25 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public Trainer findByUsername(String username) {
         return trainerRepository.findByUsername(username)
-                .orElseThrow(() -> new NoSuchElementException("Trainer doesn't exist with userName = " + username));
+                .orElseThrow(() -> new NoSuchElementException("Trainer doesn't exist with username = " + username));
     }
 
     @Override
     public TrainerSummary getTrainerSummary(String username) {
         Trainer trainer = findByUsername(username);
 
-        TrainerSummary trainerSummary = new TrainerSummary();
-        trainerSummary.setUsername(trainer.getUsername());
-        trainerSummary.setFirstName(trainer.getFirstName());
-        trainerSummary.setLastName(trainer.getLastName());
-
         Map<Integer, Map<Integer, Long>> durations = getTrainersDurations(trainer);
-        LocalDate localDate = LocalDate.now();
-        if(durations.containsKey(localDate.getYear())
-                && durations.get(localDate.getYear()).containsKey(localDate.getMonthValue())) {
-            trainerSummary.setStatus(TrainerStatus.WORKING);
+        LocalDate currentDate = LocalDate.now();
+        TrainerStatus status;
+
+        if(durations.containsKey(currentDate.getYear())
+                && durations.get(currentDate.getYear()).containsKey(currentDate.getMonthValue())) {
+            status = TrainerStatus.WORKING;
         } else {
-            trainerSummary.setStatus(TrainerStatus.RESTING);
+            status = TrainerStatus.RESTING;
         }
 
-        trainerSummary.setDurations(durations);
-
-        return trainerSummary;
+        return trainerToTrainerSummary(trainer, status, durations);
     }
 
     private Map<Integer, Map<Integer, Long>> getTrainersDurations(Trainer trainer) {
@@ -85,7 +81,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     @Transactional
     public void changeTrainerWorkload(TrainerWorkload trainerWorkload) {
-        if(!trainerExistsByUsername(trainerWorkload.getUsername())){
+        if(trainerWorkload.getActionType() == ActionType.ADD && !trainerExistsByUsername(trainerWorkload.getUsername())){
             Trainer trainer = trainerWorkloadToTrainer(trainerWorkload);
             createTrainer(trainer);
         }
