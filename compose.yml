@@ -1,0 +1,19 @@
+services:
+  spring_boot_gym:
+    image: gym-trainer-workload
+    container_name: gym-trainer-workload-container
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/myCertificate.jks -Djavax.net.ssl.keyStorePassword=rootroot -Djavax.net.ssl.trustStore=/app/resources/myCertificate.jks -Djavax.net.ssl.trustStorePassword=rootroot"
+    networks:
+      - gym-network
+    volumes:
+      - ./src/main/resources/myCertificate.jks:/app/resources/myCertificate.jks
+
+networks:
+  gym-network:
+    external: true

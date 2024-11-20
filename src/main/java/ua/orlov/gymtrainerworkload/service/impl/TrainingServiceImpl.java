@@ -1,8 +1,8 @@
 package ua.orlov.gymtrainerworkload.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.orlov.gymtrainerworkload.model.Trainer;
 import ua.orlov.gymtrainerworkload.model.Training;
 import ua.orlov.gymtrainerworkload.repository.TrainingRepository;
