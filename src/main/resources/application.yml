@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Gym_Trainer_Workload
+    name: GYM-TRAINER-WORKLOAD
 
   h2:
     console:
@@ -17,11 +17,22 @@ spring:
     hibernate:
       ddl-auto: update
 
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:myCertificate.jks
+    key-store-type: PKCS12
+    key-store-password: rootroot
+    trust-store: classpath:myCertificate.jks
+    trust-store-type: PKCS12
+    trust-store-password: rootroot
+  port: 8080
+
 eureka:
   client:
     registry-fetch-interval-seconds: 10
     service-url:
-      defaultZone: https://172.18.0.5:8443/eureka/
+      defaultZone: https://172.18.0.10:8761/eureka/
     tls:
       enabled: true
       key-store: classpath:myCertificate.jks
