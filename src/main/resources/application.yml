@@ -42,3 +42,5 @@ eureka:
       trust-store: classpath:myCertificate.jks
       trust-store-type: PKCS12
       trust-store-password: rootroot
+  instance:
+    hostname: localhost
