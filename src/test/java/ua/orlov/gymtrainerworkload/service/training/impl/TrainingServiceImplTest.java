@@ -1,4 +1,4 @@
-package ua.orlov.gymtrainerworkload.service.impl;
+package ua.orlov.gymtrainerworkload.service.training.impl;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

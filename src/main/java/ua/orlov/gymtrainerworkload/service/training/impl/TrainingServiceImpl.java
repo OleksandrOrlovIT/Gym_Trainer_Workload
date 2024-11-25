@@ -1,4 +1,4 @@
-package ua.orlov.gymtrainerworkload.service.impl;
+package ua.orlov.gymtrainerworkload.service.training.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.orlov.gymtrainerworkload.model.Trainer;
 import ua.orlov.gymtrainerworkload.model.Training;
 import ua.orlov.gymtrainerworkload.repository.TrainingRepository;
-import ua.orlov.gymtrainerworkload.service.TrainingService;
+import ua.orlov.gymtrainerworkload.service.training.TrainingService;
 
 import java.time.LocalDate;
 import java.util.List;

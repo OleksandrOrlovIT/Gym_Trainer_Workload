@@ -1,4 +1,4 @@
-package ua.orlov.gymtrainerworkload.service;
+package ua.orlov.gymtrainerworkload.service.training;
 
 import ua.orlov.gymtrainerworkload.model.Trainer;
 import ua.orlov.gymtrainerworkload.model.Training;
