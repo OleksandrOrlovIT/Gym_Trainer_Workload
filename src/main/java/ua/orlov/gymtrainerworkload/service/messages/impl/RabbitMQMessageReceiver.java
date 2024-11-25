@@ -19,27 +19,33 @@ public class RabbitMQMessageReceiver implements MessageReceiver {
     private final TrainerService trainerService;
     private final ObjectMapper objectMapper;
 
+    private static final String TRAINER_WORKLOAD_SUBJECT_NAME = "Trainer workload";
+
     public void receiveMessage(String message) {
         try {
             Map<String, String> messageContent = objectMapper.readValue(message, Map.class);
 
-            String subject = messageContent.get("subject");
-            if(!messageContent.get("subject").equals("Trainer workload")){
-                throw new IllegalArgumentException("Wrong message format for subject = " + subject);
+            if(!messageContent.containsKey("subject")
+                    || !messageContent.get("subject").equals(TRAINER_WORKLOAD_SUBJECT_NAME)){
+                throw new IllegalArgumentException("Message doesn't have subject = " + TRAINER_WORKLOAD_SUBJECT_NAME);
             }
 
             changeTrainerWorkload(messageContent.get("content"));
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Invalid message JSON", e);
+        } catch (Exception e) {
+            log.error(e);
         }
     }
 
-    private void changeTrainerWorkload(String json) {
+    public void receiveDLQMessage(String message) {
+        log.error("Message sent to DLQ: {}", message);
+    }
+
+    void changeTrainerWorkload(String json) {
         try {
             TrainerWorkload trainerWorkload = objectMapper.readValue(json, TrainerWorkload.class);
             trainerService.changeTrainerWorkload(trainerWorkload);
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Invalid TrainerWorkload JSON", e);
+        } catch (Exception e) {
+            log.error(e);
         }
     }
 }

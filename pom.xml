@@ -139,6 +139,7 @@
                 <configuration>
                     <excludes>
                         <exclude>ua/orlov/gymtrainerworkload/model/**</exclude>
+                        <exclude>ua/orlov/gymtrainerworkload/configuration/**</exclude>
                         <exclude>ua/orlov/gymtrainerworkload/GymTrainerWorkloadApplication.class</exclude>
                     </excludes>
                 </configuration>

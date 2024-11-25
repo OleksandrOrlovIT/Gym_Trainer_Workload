@@ -4,4 +4,5 @@ public interface MessageReceiver {
 
     void receiveMessage(String message);
 
+    void receiveDLQMessage(String message);
 }

@@ -40,3 +40,4 @@ RABBITMQ:
   USERNAME: guest
   PASSWORD: guest
   TRAINER-WORKLOAD-QUEUE-NAME: trainerWorkloadQueue
+  RETRY-TIME-MS: 5000
