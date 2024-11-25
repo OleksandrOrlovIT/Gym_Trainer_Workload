@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: GYM-TRAINER-WORKLOAD
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:myCertificate.jks
+    key-store-type: PKCS12
+    key-store-password: rootroot
+    trust-store: classpath:myCertificate.jks
+    trust-store-type: PKCS12
+    trust-store-password: rootroot
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{X-Transaction-Id}] [%thread] %-5level %logger{36} - %msg%n"
+
+RABBITMQ:
+  HOST: rabbitmq
+  PORT: 5672
+  USERNAME: guest
+  PASSWORD: guest
+  TRAINER-WORKLOAD-QUEUE-NAME: trainerWorkloadQueue
+  RETRY-TIME-MS: 5000
