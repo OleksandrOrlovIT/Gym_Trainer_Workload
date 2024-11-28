@@ -34,10 +34,10 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%X{X-Transaction-Id}] [%thread] %-5level %logger{36} - %msg%n"
 
-RABBITMQ:
-  HOST: rabbitmq
-  PORT: 5672
-  USERNAME: guest
-  PASSWORD: guest
-  TRAINER-WORKLOAD-QUEUE-NAME: trainerWorkloadQueue
-  RETRY-TIME-MS: 5000
+rabbitmq:
+  host: rabbitmq
+  port: 5672
+  username: guest
+  password: guest
+  trainer-workload-queue-name: trainerWorkloadQueue
+  retry-time-ms: 5000
