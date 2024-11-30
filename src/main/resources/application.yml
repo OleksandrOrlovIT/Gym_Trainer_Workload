@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: GYM-TRAINER-WORKLOAD
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:myCertificate.jks
+    key-store-type: PKCS12
+    key-store-password: rootroot
+    trust-store: classpath:myCertificate.jks
+    trust-store-type: PKCS12
+    trust-store-password: rootroot
+  port: 8080
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 10
+    service-url:
+      defaultZone: https://172.18.0.10:8761/eureka/
+    tls:
+      enabled: true
+      key-store: classpath:myCertificate.jks
+      key-store-type: PKCS12
+      key-store-password: rootroot
+      key-password: rootroot
+      trust-store: classpath:myCertificate.jks
+      trust-store-type: PKCS12
+      trust-store-password: rootroot
+  instance:
+    hostname: localhost
+
+logging:
+  level:
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{X-Transaction-Id}] [%thread] %-5level %logger{36} - %msg%n"
