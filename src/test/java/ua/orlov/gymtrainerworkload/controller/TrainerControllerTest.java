@@ -52,12 +52,12 @@ class TrainerControllerTest {
     @Test
     void changeWorkLoadThenSuccess() throws Exception {
         TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setUsername("username");
-        trainerWorkload.setFirstName("firstName");
-        trainerWorkload.setLastName("lastName");
-        trainerWorkload.setIsActive(true);
+        trainerWorkload.setTrainerUsername("username");
+        trainerWorkload.setTrainerFirstName("firstName");
+        trainerWorkload.setTrainerLastName("lastName");
+        trainerWorkload.setTrainerIsActive(true);
         trainerWorkload.setTrainingDate(LocalDate.MIN);
-        trainerWorkload.setTrainingDuration(50L);
+        trainerWorkload.setTrainingDurationMinutes(50);
         trainerWorkload.setActionType(ActionType.ADD);
 
         mockMvc.perform(post("/api/v1/trainer/workload")

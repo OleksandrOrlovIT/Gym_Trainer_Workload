@@ -7,8 +7,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
-      - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/myCertificate.jks -Djavax.net.ssl.keyStorePassword=rootroot -Djavax.net.ssl.trustStore=/app/resources/myCertificate.jks -Djavax.net.ssl.trustStorePassword=rootroot"
+      - JAVA_OPTS="-Djavax.net.ssl.keyStore=/app/resources/myCertificate.jks -Djavax.net.ssl.keyStorePassword=${KEY_STORE_PASSWORD} -Djavax.net.ssl.trustStore=/app/resources/myCertificate.jks -Djavax.net.ssl.trustStorePassword=${TRUST_STORE_PASSWORD}"
     networks:
       gym-network:
         ipv4_address: 172.18.0.6

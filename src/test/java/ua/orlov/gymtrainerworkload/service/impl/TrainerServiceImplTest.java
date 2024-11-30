@@ -7,18 +7,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.mapper.TrainerMapper;
 import ua.orlov.gymtrainerworkload.model.ActionType;
+import ua.orlov.gymtrainerworkload.model.Month;
 import ua.orlov.gymtrainerworkload.model.Trainer;
-import ua.orlov.gymtrainerworkload.model.TrainerStatus;
 import ua.orlov.gymtrainerworkload.model.Training;
 import ua.orlov.gymtrainerworkload.repository.TrainerRepository;
-import ua.orlov.gymtrainerworkload.service.TrainingService;
+import ua.orlov.gymtrainerworkload.repository.TrainingRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,7 +31,10 @@ public class TrainerServiceImplTest {
     private TrainerRepository trainerRepository;
 
     @Mock
-    private TrainingService trainingService;
+    private TrainingRepository trainingRepository;
+
+    @Mock
+    private TrainerMapper trainerMapper;
 
     @InjectMocks
     private TrainerServiceImpl trainerServiceImpl;
@@ -51,7 +52,7 @@ public class TrainerServiceImplTest {
     void findByUsernameThenException() {
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.empty());
 
-        var e = assertThrows(NoSuchElementException.class, () -> trainerServiceImpl.findByUsername(USERNAME));
+        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> trainerServiceImpl.findByUsername(USERNAME));
         assertEquals("Trainer doesn't exist with username = " + USERNAME, e.getMessage());
     }
 
@@ -65,65 +66,6 @@ public class TrainerServiceImplTest {
     }
 
     @Test
-    void getTrainerSummaryWithoutTrainingsThenSuccess() {
-        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(new Trainer()));
-        when(trainingService.findAllTrainingsByTrainer(any())).thenReturn(new ArrayList<>());
-
-        TrainerSummary trainerSummary = trainerServiceImpl.getTrainerSummary(USERNAME);
-
-        assertNotNull(trainerSummary);
-        assertTrue(trainerSummary.getDurations().isEmpty());
-        assertEquals(TrainerStatus.RESTING, trainerSummary.getStatus());
-
-        verify(trainerRepository, times(1)).findByUsername(any());
-        verify(trainingService, times(1)).findAllTrainingsByTrainer(any());
-    }
-
-    @Test
-    void getTrainerSummaryWithTrainingsThenSuccess() {
-        Trainer trainer = new Trainer();
-        Training training = new Training();
-        training.setTrainer(trainer);
-        training.setTrainingDate(LocalDate.now());
-        training.setDuration(60L);
-
-        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
-        when(trainingService.findAllTrainingsByTrainer(any())).thenReturn(List.of(training));
-
-        TrainerSummary trainerSummary = trainerServiceImpl.getTrainerSummary(USERNAME);
-
-        assertNotNull(trainerSummary);
-        assertEquals(TrainerStatus.WORKING, trainerSummary.getStatus());
-        assertEquals(trainer.getUsername(), trainerSummary.getUsername());
-        assertFalse(trainerSummary.getDurations().isEmpty());
-
-        verify(trainerRepository, times(1)).findByUsername(any());
-        verify(trainingService, times(1)).findAllTrainingsByTrainer(any());
-    }
-
-    @Test
-    void getTrainerSummaryWithTrainingsOfPastMonthsThenSuccess() {
-        Trainer trainer = new Trainer();
-        Training training = new Training();
-        training.setTrainer(trainer);
-        training.setTrainingDate(LocalDate.now().minusMonths(2L));
-        training.setDuration(60L);
-
-        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
-        when(trainingService.findAllTrainingsByTrainer(any())).thenReturn(List.of(training));
-
-        TrainerSummary trainerSummary = trainerServiceImpl.getTrainerSummary(USERNAME);
-
-        assertNotNull(trainerSummary);
-        assertEquals(TrainerStatus.RESTING, trainerSummary.getStatus());
-        assertEquals(trainer.getUsername(), trainerSummary.getUsername());
-        assertFalse(trainerSummary.getDurations().isEmpty());
-
-        verify(trainerRepository, times(1)).findByUsername(any());
-        verify(trainingService, times(1)).findAllTrainingsByTrainer(any());
-    }
-
-    @Test
     void changeTrainerWorkloadThenCreatesNewTrainerAndTraining() {
         TrainerWorkload trainerWorkload = new TrainerWorkload();
         trainerWorkload.setActionType(ActionType.ADD);
@@ -131,14 +73,14 @@ public class TrainerServiceImplTest {
         when(trainerRepository.save(any())).thenReturn(new Trainer());
         when(trainerRepository.existsByUsername(any())).thenReturn(false);
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(new Trainer()));
-        when(trainingService.createTraining(any())).thenReturn(new Training());
+        when(trainingRepository.save(any())).thenReturn(new Training());
 
         assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
 
         verify(trainerRepository, times(1)).save(any());
         verify(trainerRepository, times(1)).existsByUsername(any());
         verify(trainerRepository, times(1)).findByUsername(any());
-        verify(trainingService, times(1)).createTraining(any());
+        verify(trainingRepository, times(1)).save(any());
     }
 
     @Test
@@ -148,26 +90,13 @@ public class TrainerServiceImplTest {
 
         when(trainerRepository.existsByUsername(any())).thenReturn(true);
         when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(new Trainer()));
-        when(trainingService.createTraining(any())).thenReturn(new Training());
+        when(trainingRepository.save(any())).thenReturn(new Training());
 
         assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
 
         verify(trainerRepository, times(1)).existsByUsername(any());
         verify(trainerRepository, times(1)).findByUsername(any());
-        verify(trainingService, times(1)).createTraining(any());
-    }
-
-    @Test
-    void changeTrainerWorkloadThenDeletesTraining() {
-        TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setActionType(ActionType.DELETE);
-
-        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(new Trainer()));
-
-        assertDoesNotThrow(() -> trainerServiceImpl.changeTrainerWorkload(trainerWorkload));
-
-        verify(trainerRepository, times(1)).findByUsername(any());
-        verify(trainingService, times(1)).deleteTraining(any());
+        verify(trainingRepository, times(1)).save(any());
     }
 
     @Test
@@ -177,5 +106,106 @@ public class TrainerServiceImplTest {
         assertTrue(trainerServiceImpl.trainerExistsByUsername(USERNAME));
 
         verify(trainerRepository, times(1)).existsByUsername(any());
+    }
+
+    @Test
+    void createTrainingThenSuccess() {
+        when(trainingRepository.save(any())).thenReturn(new Training());
+
+        Training training = trainerServiceImpl.createTraining(any());
+
+        assertNotNull(training);
+        verify(trainingRepository, times(1)).save(any());
+    }
+
+    @Test
+    void deleteTrainingThenSuccess() {
+        when(trainingRepository.findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any()))
+                .thenReturn(Optional.of(new Training()));
+
+        Training training = new Training();
+        training.setTrainer(new Trainer());
+        trainerServiceImpl.deleteTraining(training);
+
+        verify(trainingRepository, times(1))
+                .findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any());
+        verify(trainingRepository, times(1)).delete(any());
+    }
+
+    @Test
+    void deleteTrainingThenNullPointerException() {
+        NullPointerException e = assertThrows(NullPointerException.class, () -> trainerServiceImpl.deleteTraining(new Training()));
+
+        assertEquals("Trainer must not be null", e.getMessage());
+    }
+
+    @Test
+    void deleteTrainingThenNoSuchElementException() {
+        when(trainingRepository.findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any()))
+                .thenReturn(Optional.empty());
+
+        Training training = new Training();
+        training.setTrainer(new Trainer());
+
+        NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> trainerServiceImpl.deleteTraining(training));
+
+        assertEquals("No training found for trainer 'null' on null with duration null", e.getMessage());
+
+        verify(trainingRepository, times(1))
+                .findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any());
+    }
+
+    @Test
+    void findAllTrainingsByTrainerThenSuccess() {
+        when(trainingRepository.findByTrainer(any())).thenReturn(new ArrayList<>());
+
+        assertNotNull(trainerServiceImpl.findAllTrainingsByTrainer(new Trainer()));
+
+        verify(trainingRepository, times(1)).findByTrainer(any());
+    }
+
+    @Test
+    void changeTrainerWorkloadThenDelete() {
+        TrainerWorkload trainerWorkload = new TrainerWorkload();
+        trainerWorkload.setActionType(ActionType.DELETE);
+
+        Training training = new Training();
+        training.setTrainer(new Trainer());
+
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(new Trainer()));
+        when(trainerMapper.trainerWorkloadToTraining(any(), any())).thenReturn(training);
+        when(trainingRepository.findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any()))
+                .thenReturn(Optional.of(new Training()));
+
+        trainerServiceImpl.changeTrainerWorkload(trainerWorkload);
+
+        verify(trainerRepository).findByUsername(any());
+        verify(trainerMapper).trainerWorkloadToTraining(any(), any());
+        verify(trainingRepository).findByTrainerAndTrainingDateAndDurationMinutes(any(), any(), any());
+        verify(trainingRepository).delete(any());
+    }
+
+    @Test
+    void getTrainerSummaryThenSuccess() {
+        Trainer trainer = new Trainer();
+
+        Training training = new Training();
+        training.setTrainer(new Trainer());
+        training.setDurationMinutes(10);
+        training.setTrainingDate(LocalDate.of(2020, 10, 10));
+
+        Map<Month, Integer> monthSummary = new HashMap<>();
+        monthSummary.put(Month.OCTOBER, 10);
+        Map<Integer, Map<Month, Integer>> yearsSummary = new HashMap<>();
+        yearsSummary.put(2020, monthSummary);
+
+        when(trainerRepository.findByUsername(any())).thenReturn(Optional.of(trainer));
+        when(trainerMapper.trainerToTrainerSummary(any(), any())).thenReturn(new TrainerSummary());
+        when(trainingRepository.findByTrainer(any())).thenReturn(List.of(training));
+
+        assertDoesNotThrow(() -> trainerServiceImpl.getTrainerSummary(USERNAME));
+
+        verify(trainerRepository).findByUsername(any());
+        verify(trainingRepository).findByTrainer(any());
     }
 }

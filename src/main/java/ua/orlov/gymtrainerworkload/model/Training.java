@@ -23,7 +23,7 @@ public class Training {
     @Column(name = "training_date", nullable = false)
     private LocalDate trainingDate;
 
-    @Column(name = "training_duration", nullable = false)
-    private Long duration;
+    @Column(name = "training_duration_minutes", nullable = false)
+    private Integer durationMinutes;
 
 }

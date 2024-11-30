@@ -22,10 +22,10 @@ server:
     enabled: true
     key-store: classpath:myCertificate.jks
     key-store-type: PKCS12
-    key-store-password: rootroot
+    key-store-password: ${KEY_STORE_PASSWORD}
     trust-store: classpath:myCertificate.jks
     trust-store-type: PKCS12
-    trust-store-password: rootroot
+    trust-store-password: ${TRUST_STORE_PASSWORD}
   port: 8080
 
 eureka:
@@ -37,11 +37,11 @@ eureka:
       enabled: true
       key-store: classpath:myCertificate.jks
       key-store-type: PKCS12
-      key-store-password: rootroot
-      key-password: rootroot
+      key-store-password: ${KEY_STORE_PASSWORD}
+      key-password: ${KEY_STORE_PASSWORD}
       trust-store: classpath:myCertificate.jks
       trust-store-type: PKCS12
-      trust-store-password: rootroot
+      trust-store-password: ${TRUST_STORE_PASSWORD}
   instance:
     hostname: localhost
 
