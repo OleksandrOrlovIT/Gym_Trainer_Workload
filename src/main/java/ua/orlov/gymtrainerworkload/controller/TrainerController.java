@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
-import ua.orlov.gymtrainerworkload.service.TrainerService;
+import ua.orlov.gymtrainerworkload.service.user.TrainerService;
 
 @AllArgsConstructor
 @RestController

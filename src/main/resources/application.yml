@@ -28,25 +28,16 @@ server:
     trust-store-password: ${TRUST_STORE_PASSWORD}
   port: 8080
 
-eureka:
-  client:
-    registry-fetch-interval-seconds: 10
-    service-url:
-      defaultZone: https://172.18.0.10:8761/eureka/
-    tls:
-      enabled: true
-      key-store: classpath:myCertificate.jks
-      key-store-type: PKCS12
-      key-store-password: ${KEY_STORE_PASSWORD}
-      key-password: ${KEY_STORE_PASSWORD}
-      trust-store: classpath:myCertificate.jks
-      trust-store-type: PKCS12
-      trust-store-password: ${TRUST_STORE_PASSWORD}
-  instance:
-    hostname: localhost
-
 logging:
   level:
     root: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%X{X-Transaction-Id}] [%thread] %-5level %logger{36} - %msg%n"
+
+rabbitmq:
+  host: rabbitmq
+  port: 5672
+  username: guest
+  password: guest
+  trainer-workload-queue-name: trainerWorkloadQueue
+  retry-time-ms: 5000
