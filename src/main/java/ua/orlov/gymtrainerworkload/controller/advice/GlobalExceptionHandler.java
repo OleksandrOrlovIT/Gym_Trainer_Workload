@@ -57,8 +57,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessLogicException.class)
     @ResponseBody
-    public ResponseEntity<?> handleCustomLogicException(BusinessLogicException ex) {
-        logException("CustomLogicException occurred", ex);
+    public ResponseEntity<?> handleBusinessLogicException(BusinessLogicException ex) {
+        logException("BusinessLogicException occurred", ex);
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "LOGIC_ERROR", ex.getMessage());
     }
 
