@@ -10,8 +10,8 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
-    username: sa
-    password: ""
+    username: ${H2_USERNAME}
+    password: ${H2_PASSWORD}
 
   jpa:
     hibernate:
@@ -22,10 +22,10 @@ server:
     enabled: true
     key-store: classpath:myCertificate.jks
     key-store-type: PKCS12
-    key-store-password: rootroot
+    key-store-password: ${KEY_STORE_PASSWORD}
     trust-store: classpath:myCertificate.jks
     trust-store-type: PKCS12
-    trust-store-password: rootroot
+    trust-store-password: ${TRUST_STORE_PASSWORD}
   port: 8080
 
 logging:
@@ -37,7 +37,7 @@ logging:
 rabbitmq:
   host: rabbitmq
   port: 5672
-  username: guest
-  password: guest
+  username: ${RABBITMQ_USER}
+  password: ${RABBITMQ_PASSWORD}
   trainer-workload-queue-name: trainerWorkloadQueue
   retry-time-ms: 5000

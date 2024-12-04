@@ -123,5 +123,5 @@ class RabbitMQMessageReceiverTest {
         assertDoesNotThrow(() -> rabbitMQMessageReceiver.receiveDLQMessage(input));
     }
 
-
 }
+
