@@ -1,4 +1,4 @@
-package ua.orlov.gymtrainerworkload.service;
+package ua.orlov.gymtrainerworkload.service.user;
 
 import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;

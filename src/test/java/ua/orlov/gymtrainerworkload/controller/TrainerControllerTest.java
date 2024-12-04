@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
 import ua.orlov.gymtrainerworkload.model.ActionType;
-import ua.orlov.gymtrainerworkload.service.TrainerService;
+import ua.orlov.gymtrainerworkload.service.user.TrainerService;
 
 import java.time.LocalDate;
 
