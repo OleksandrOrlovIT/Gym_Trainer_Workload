@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.orlov.gymtrainerworkload.model.TrainerStatus;
+import ua.orlov.gymtrainerworkload.model.Month;
 
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class TrainerSummary {
 
     private String lastName;
 
-    private TrainerStatus status;
+    private boolean status;
 
-    private Map<Integer, Map<Integer, Long>> durations;
+    private Map<Integer, Map<Month, Integer>> trainingMinutesByYearAndMonth;
 }

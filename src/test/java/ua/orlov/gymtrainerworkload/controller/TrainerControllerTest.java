@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.orlov.gymtrainerworkload.dto.TrainerSummary;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
 import ua.orlov.gymtrainerworkload.model.ActionType;
-import ua.orlov.gymtrainerworkload.service.TrainerService;
+import ua.orlov.gymtrainerworkload.service.user.TrainerService;
 
 import java.time.LocalDate;
 
@@ -52,12 +52,12 @@ class TrainerControllerTest {
     @Test
     void changeWorkLoadThenSuccess() throws Exception {
         TrainerWorkload trainerWorkload = new TrainerWorkload();
-        trainerWorkload.setUsername("username");
-        trainerWorkload.setFirstName("firstName");
-        trainerWorkload.setLastName("lastName");
-        trainerWorkload.setIsActive(true);
+        trainerWorkload.setTrainerUsername("username");
+        trainerWorkload.setTrainerFirstName("firstName");
+        trainerWorkload.setTrainerLastName("lastName");
+        trainerWorkload.setTrainerIsActive(true);
         trainerWorkload.setTrainingDate(LocalDate.MIN);
-        trainerWorkload.setTrainingDuration(50L);
+        trainerWorkload.setTrainingDurationMinutes(50);
         trainerWorkload.setActionType(ActionType.ADD);
 
         mockMvc.perform(post("/api/v1/trainer/workload")

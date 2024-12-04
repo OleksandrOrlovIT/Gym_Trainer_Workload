@@ -1,4 +1,4 @@
-package ua.orlov.gymtrainerworkload.exception;
+package ua.orlov.gymtrainerworkload.controller.advice;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpMethod;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ua.orlov.gymtrainerworkload.dto.TrainerWorkload;
+import ua.orlov.gymtrainerworkload.exception.BusinessLogicException;
 
 import java.util.NoSuchElementException;
 
@@ -55,6 +56,11 @@ public class TestController {
     @PostMapping("/http-message-not-readable")
     public void messageNotReadable(@RequestBody @Validated TrainerWorkload trainerWorkload) {
 
+    }
+
+    @GetMapping("/business-logic-exception")
+    public void businessLogicException() {
+        throw new BusinessLogicException("Business Logic");
     }
 
 }

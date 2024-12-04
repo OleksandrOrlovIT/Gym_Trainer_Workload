@@ -16,23 +16,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TrainerWorkload {
 
-    @NotBlank(message = "username is required.")
-    private String username;
+    @NotBlank(message = "trainerUsername is required.")
+    private String trainerUsername;
 
-    @NotBlank(message = "firstName is required.")
-    private String firstName;
+    @NotBlank(message = "trainerFirstName is required.")
+    private String trainerFirstName;
 
-    @NotBlank(message = "lastName is required.")
-    private String lastName;
+    @NotBlank(message = "trainerLastName is required.")
+    private String trainerLastName;
 
-    @NotNull(message = "isActive is required.")
-    private Boolean isActive;
+    @NotNull(message = "trainerIsActive is required.")
+    private boolean trainerIsActive;
 
     @NotNull(message = "trainingDate is required.")
     private LocalDate trainingDate;
 
-    @NotNull(message = "trainingDuration is required.")
-    private Long trainingDuration;
+    @NotNull(message = "trainingDurationMinutes is required.")
+    private Integer trainingDurationMinutes;
 
     @NotNull(message = "actionType is required.")
     private ActionType actionType;

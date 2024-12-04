@@ -1,10 +1,8 @@
-package ua.orlov.gymtrainerworkload.exception;
+package ua.orlov.gymtrainerworkload.controller.advice;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +23,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
 public class GlobalExceptionHandlerTest {
 
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders
                 .standaloneSetup(new TestController())
                 .setControllerAdvice(new GlobalExceptionHandler())
@@ -70,7 +66,7 @@ public class GlobalExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Illegal argument Exception\",\"status\":\"BAD_REQUEST\"}", content);
+        assertEquals("{\"message\":\"An unexpected illegal argument was provided\",\"status\":\"BAD_REQUEST\"}", content);
     }
 
     @Test
@@ -81,7 +77,7 @@ public class GlobalExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Runtime Exception\",\"status\":\"INTERNAL_SERVER_ERROR\"}", content);
+        assertEquals("{\"message\":\"An unexpected runtime error occurred.\",\"status\":\"INTERNAL_ERROR\"}", content);
     }
 
     @Test
@@ -92,7 +88,7 @@ public class GlobalExceptionHandlerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        assertEquals("{\"message\":\"Exception\",\"status\":\"INTERNAL_SERVER_ERROR\"}", content);
+        assertEquals("{\"message\":\"An unexpected error occurred.\",\"status\":\"GENERAL_ERROR\"}", content);
     }
 
     @Test
@@ -134,5 +130,16 @@ public class GlobalExceptionHandlerTest {
 
         String content = result.getResponse().getContentAsString();
         assertEquals("{\"message\":\"JSON parse error: Unrecognized token 'asdaksjdjashfivoqnva': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')\",\"status\":\"BAD_REQUEST\"}", content);
+    }
+
+    @Test
+    void handleBusinessLogicException() throws Exception {
+        MvcResult result = mockMvc.perform(get("/business-logic-exception")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        assertEquals("{\"message\":\"Business Logic\",\"status\":\"LOGIC_ERROR\"}", content);
     }
 }

@@ -14,5 +14,6 @@ public interface TrainingRepository extends JpaRepository<Training, Long> {
 
     List<Training> findByTrainer(Trainer trainer);
 
-    Optional<Training> findByTrainerAndTrainingDateAndDuration(Trainer trainer, LocalDate trainingDate, Long duration);
+    Optional<Training> findByTrainerAndTrainingDateAndDurationMinutes
+            (Trainer trainer, LocalDate trainingDate, Integer duration);
 }

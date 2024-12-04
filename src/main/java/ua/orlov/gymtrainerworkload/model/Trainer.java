@@ -2,7 +2,9 @@ package ua.orlov.gymtrainerworkload.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,8 @@ public class Trainer {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Training> trainings = new ArrayList<>();
 }
